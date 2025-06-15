@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -195,9 +194,8 @@ const Contact = () => {
                 </Button>
                 <Button 
                   asChild
-                  variant="outline"
                   size="lg"
-                  className="border-white text-white hover:bg-white hover:text-green-600 px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                  className="bg-green-600 text-white hover:bg-white hover:text-green-600 px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
                   <a href="tel:+919920361564">
                     <Phone className="mr-2" />
