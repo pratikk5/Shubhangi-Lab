@@ -19,8 +19,12 @@ const Footer = () => {
             {/* Company Info */}
             <div className="lg:col-span-2 animate-fade-in">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-green-600 font-bold text-xl">S</span>
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+                  <img 
+                    src="/logo.jpg" 
+                    alt="Shubhangi Lab Logo" 
+                    className="w-10 h-10 object-cover rounded-full"
+                  />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold">Shubhangi Lab</h3>
@@ -75,8 +79,11 @@ const Footer = () => {
               <div className="space-y-3 text-sm">
                 <div>
                   <p className="text-green-100 font-medium">Phone:</p>
-                  <a href="tel:+919920361564" className="text-white hover:text-green-200 transition-colors">
+                  <a href="tel:+919920361564" className="text-white hover:text-green-200 transition-colors block">
                     +91 99203 61564
+                  </a>
+                  <a href="tel:+917373739564" className="text-white hover:text-green-200 transition-colors block">
+                    +91 73737 39564
                   </a>
                 </div>
                 <div>
