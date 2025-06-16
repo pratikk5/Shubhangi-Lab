@@ -18,9 +18,12 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             {/* Company Info */}
             <div className="lg:col-span-2 animate-fade-in">
-              <div className="mb-4">
-                <h3 className="text-2xl font-bold">Shubhangi Lab</h3>
-                <p className="text-green-100 text-sm">Since 1994 - Trusted Healthcare Partner</p>
+              <div className="mb-4 flex items-center space-x-3">
+                <img 
+                  src="/logo.jpg" 
+                  alt="Shubhangi Lab Logo" 
+                  className="w-16 h-16 rounded-full object-cover border-2 border-white/20"
+                />
               </div>
               <p className="text-green-100 leading-relaxed mb-6 max-w-md">
                 Three decades of excellence in healthcare diagnostics. We are committed to providing 
