@@ -49,7 +49,7 @@ const Header = ({ activeSection }: HeaderProps) => {
             <img 
               src="/logo.jpg" 
               alt="Shubhangi Lab Logo" 
-              className="w-12 h-12 rounded-full object-cover border-2 border-white/20"
+              className="h-12 w-auto object-contain"
             />
           </div>
 

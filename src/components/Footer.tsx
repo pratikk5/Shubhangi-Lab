@@ -22,7 +22,7 @@ const Footer = () => {
                 <img 
                   src="/logo.jpg" 
                   alt="Shubhangi Lab Logo" 
-                  className="w-16 h-16 rounded-full object-cover border-2 border-white/20"
+                  className="h-16 w-auto object-contain"
                 />
               </div>
               <p className="text-green-100 leading-relaxed mb-6 max-w-md">
