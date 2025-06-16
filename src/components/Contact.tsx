@@ -1,9 +1,12 @@
-import React from 'react';
-import { Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
+
+import React, { useState } from 'react';
+import { Phone, Mail, MapPin, Clock, MessageCircle, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const Contact = () => {
+  const [showPhoneOptions, setShowPhoneOptions] = useState(false);
+
   const contactInfo = [
     {
       icon: Phone,
@@ -48,8 +51,50 @@ const Contact = () => {
     document.getElementById('appointment')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handlePhoneClick = () => {
+    setShowPhoneOptions(true);
+  };
+
+  const handlePhoneCall = (phoneNumber: string) => {
+    window.location.href = `tel:${phoneNumber.replace(/\s/g, '')}`;
+    setShowPhoneOptions(false);
+  };
+
   return (
     <section id="contact" className="py-20 bg-white relative overflow-hidden">
+      {/* Phone Options Modal */}
+      {showPhoneOptions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-2xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Choose Phone Number</h3>
+              <button 
+                onClick={() => setShowPhoneOptions(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <Button
+                onClick={() => handlePhoneCall('+919920361564')}
+                className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-center space-x-2"
+              >
+                <Phone className="w-4 h-4" />
+                <span>+91 99203 61564</span>
+              </Button>
+              <Button
+                onClick={() => handlePhoneCall('+917373739564')}
+                className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-center space-x-2"
+              >
+                <Phone className="w-4 h-4" />
+                <span>+91 73737 39564</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-20 w-40 h-40 border-4 border-green-300 rounded-full"></div>
@@ -113,11 +158,11 @@ const Contact = () => {
 
                     {/* Action Button */}
                     <Button
-                      onClick={info.actionLink.startsWith('#') ? scrollToAppointment : undefined}
-                      asChild={!info.actionLink.startsWith('#')}
+                      onClick={info.title === 'Phone Numbers' ? handlePhoneClick : info.actionLink.startsWith('#') ? scrollToAppointment : undefined}
+                      asChild={!info.actionLink.startsWith('#') && info.title !== 'Phone Numbers'}
                       className={`bg-gradient-to-r ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[0]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[1]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[4]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[5]} text-white rounded-full px-6 py-2 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
                     >
-                      {info.actionLink.startsWith('#') ? (
+                      {info.title === 'Phone Numbers' || info.actionLink.startsWith('#') ? (
                         <span>
                           <MessageCircle className="mr-2 w-4 h-4" />
                           {info.action}
@@ -193,14 +238,12 @@ const Contact = () => {
                   Book Appointment Now
                 </Button>
                 <Button 
-                  asChild
+                  onClick={handlePhoneClick}
                   size="lg"
                   className="bg-green-600 text-white hover:bg-white hover:text-green-600 px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
-                  <a href="tel:+919920361564">
-                    <Phone className="mr-2" />
-                    Call Us Now
-                  </a>
+                  <Phone className="mr-2" />
+                  Call Us Now
                 </Button>
               </div>
             </div>
