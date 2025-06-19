@@ -18,14 +18,12 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             {/* Company Info */}
             <div className="lg:col-span-2 animate-fade-in">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-green-600 font-bold text-xl">S</span>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold">Shubhangi Lab</h3>
-                  <p className="text-green-100 text-sm">Since 1994 - Trusted Healthcare Partner</p>
-                </div>
+              <div className="mb-4 flex items-center space-x-3">
+                <img 
+                  src="/logo.jpg" 
+                  alt="Shubhangi Lab Logo" 
+                  className="h-16 w-auto object-contain"
+                />
               </div>
               <p className="text-green-100 leading-relaxed mb-6 max-w-md">
                 Three decades of excellence in healthcare diagnostics. We are committed to providing 
@@ -75,8 +73,11 @@ const Footer = () => {
               <div className="space-y-3 text-sm">
                 <div>
                   <p className="text-green-100 font-medium">Phone:</p>
-                  <a href="tel:+919920361564" className="text-white hover:text-green-200 transition-colors">
+                  <a href="tel:+919920361564" className="text-white hover:text-green-200 transition-colors block">
                     +91 99203 61564
+                  </a>
+                  <a href="tel:+917373739564" className="text-white hover:text-green-200 transition-colors block">
+                    +91 73737 39564
                   </a>
                 </div>
                 <div>

@@ -46,13 +46,11 @@ const Header = ({ activeSection }: HeaderProps) => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <div className="flex items-center space-x-3 animate-fade-in">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-green-600 font-bold text-xl">S</span>
-            </div>
-            <div>
-              <h1 className="text-white text-xl font-bold">Shubhangi Lab</h1>
-              <p className="text-green-100 text-xs">Since 1994</p>
-            </div>
+            <img 
+              src="/logo.jpg" 
+              alt="Shubhangi Lab Logo" 
+              className="h-12 w-auto object-contain"
+            />
           </div>
 
           {/* Desktop Navigation */}
