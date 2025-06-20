@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Calendar, Phone, Mail, MapPin, Clock, Heart, Activity, Stethoscope, Users, Award, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,13 +14,14 @@ import Appointment from '@/components/Appointment';
 import Gallery from '@/components/Gallery';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import Reviews from '@/components/Reviews';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'services', 'appointment', 'gallery', 'contact'];
+      const sections = ['home', 'about', 'services', 'appointment', 'reviews', 'gallery', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -50,6 +50,7 @@ const Index = () => {
         <About />
         <Services />
         <Appointment />
+        <Reviews />
         <Gallery />
         <Contact />
       </main>

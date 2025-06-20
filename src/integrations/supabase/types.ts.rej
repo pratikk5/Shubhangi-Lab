@@ -1,0 +1,25 @@
+diff a/src/integrations/supabase/types.ts b/src/integrations/supabase/types.ts	(rejected hunks)
+@@ -14,7 +14,6 @@ export type Database = {
+           additional_info: string | null
+           age: number
+           appointment_date: string
+-          appointment_number: number
+           created_at: string
+           email: string
+           full_name: string
+@@ -27,7 +26,6 @@ export type Database = {
+           additional_info?: string | null
+           age: number
+           appointment_date: string
+-          appointment_number?: number
+           created_at?: string
+           email: string
+           full_name: string
+@@ -40,7 +38,6 @@ export type Database = {
+           additional_info?: string | null
+           age?: number
+           appointment_date?: string
+-          appointment_number?: number
+           created_at?: string
+           email?: string
+           full_name?: string

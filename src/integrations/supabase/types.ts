@@ -48,6 +48,42 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          created_at: string
+          email: string
+          experience_date: string | null
+          id: string
+          is_verified: boolean | null
+          patient_name: string
+          rating: number
+          review_number: number
+          review_text: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          experience_date?: string | null
+          id?: string
+          is_verified?: boolean | null
+          patient_name: string
+          rating: number
+          review_number?: number
+          review_text: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          experience_date?: string | null
+          id?: string
+          is_verified?: boolean | null
+          patient_name?: string
+          rating?: number
+          review_number?: number
+          review_text?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
