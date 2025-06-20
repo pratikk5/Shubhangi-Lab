@@ -1,0 +1,529 @@
+From a221889b4ad6a02b0b63217ffa3a6596202de3cd Mon Sep 17 00:00:00 2001
+From: "gpt-engineer-app[bot]"
+ <159125892+gpt-engineer-app[bot]@users.noreply.github.com>
+Date: Fri, 20 Jun 2025 00:34:40 +0000
+Subject: [PATCH] Apply SQL changes for reviews table
+
+Apply the SQL commands to create the reviews table and related configurations.
+---
+ src/components/Header.tsx                     |  21 +-
+ src/components/Reviews.tsx                    | 313 ++++++++++++++++++
+ src/integrations/supabase/types.ts            |  39 ++-
+ src/pages/Index.tsx                           |   5 +-
+ ...2-152ad785-5e0c-4ecb-9c8f-108186da7881.sql |  36 ++
+ 5 files changed, 399 insertions(+), 15 deletions(-)
+ create mode 100644 src/components/Reviews.tsx
+ create mode 100644 supabase/migrations/20250620003352-152ad785-5e0c-4ecb-9c8f-108186da7881.sql
+
+diff --git a/src/components/Header.tsx b/src/components/Header.tsx
+index a5515a3..e1193f0 100644
+--- a/src/components/Header.tsx
++++ b/src/components/Header.tsx
+@@ -1,4 +1,3 @@
+-
+ import React, { useState, useEffect } from 'react';
+ import { Menu, X } from 'lucide-react';
+ import { Button } from '@/components/ui/button';
+@@ -9,13 +8,21 @@ interface HeaderProps {
+ 
+ const Header = ({ activeSection }: HeaderProps) => {
+   const [isMenuOpen, setIsMenuOpen] = useState(false);
+-  const [isScrolled, setIsScrolled] = useState(false);
++
++  const scrollToSection = (sectionId: string) => {
++    const element = document.getElementById(sectionId);
++    if (element) {
++      element.scrollIntoView({ behavior: 'smooth' });
++    }
++    setIsMenuOpen(false);
++  };
+ 
+   const navItems = [
+     { id: 'home', label: 'Home' },
+-    { id: 'about', label: 'About Us' },
++    { id: 'about', label: 'About' },
+     { id: 'services', label: 'Services' },
+-    { id: 'appointment', label: 'Appointment' },
++    { id: 'appointment', label: 'Book Appointment' },
++    { id: 'reviews', label: 'Reviews' },
+     { id: 'gallery', label: 'Gallery' },
+     { id: 'contact', label: 'Contact' },
+   ];
+@@ -28,12 +35,6 @@ const Header = ({ activeSection }: HeaderProps) => {
+     return () => window.removeEventListener('scroll', handleScroll);
+   }, []);
+ 
+-  const scrollToSection = (sectionId: string) => {
+-    const element = document.getElementById(sectionId);
+-    element?.scrollIntoView({ behavior: 'smooth' });
+-    setIsMenuOpen(false);
+-  };
+-
+   return (
+     <header 
+       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+diff --git a/src/components/Reviews.tsx b/src/components/Reviews.tsx
+new file mode 100644
+index 0000000..62446a0
+--- /dev/null
++++ b/src/components/Reviews.tsx
+@@ -0,0 +1,313 @@
++
++import React, { useState, useEffect } from 'react';
++import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
++import { Button } from '@/components/ui/button';
++import { Input } from '@/components/ui/input';
++import { Textarea } from '@/components/ui/textarea';
++import { Label } from '@/components/ui/label';
++import { Star, Users, MessageSquare, Calendar } from 'lucide-react';
++import { supabase } from '@/integrations/supabase/client';
++import { useToast } from '@/hooks/use-toast';
++
++interface Review {
++  id: string;
++  review_number: number;
++  patient_name: string;
++  email: string;
++  rating: number;
++  review_text: string;
++  experience_date: string | null;
++  is_verified: boolean;
++  created_at: string;
++}
++
++const Reviews = () => {
++  const [reviews, setReviews] = useState<Review[]>([]);
++  const [loading, setLoading] = useState(false);
++  const [submitting, setSubmitting] = useState(false);
++  const { toast } = useToast();
++
++  // Form state
++  const [formData, setFormData] = useState({
++    patient_name: '',
++    email: '',
++    rating: 5,
++    review_text: '',
++    experience_date: ''
++  });
++
++  // Fetch verified reviews
++  const fetchReviews = async () => {
++    setLoading(true);
++    try {
++      const { data, error } = await supabase
++        .from('reviews')
++        .select('*')
++        .eq('is_verified', true)
++        .order('created_at', { ascending: false });
++
++      if (error) {
++        console.error('Error fetching reviews:', error);
++        toast({
++          title: "Error",
++          description: "Failed to load reviews",
++          variant: "destructive",
++        });
++      } else {
++        setReviews(data || []);
++      }
++    } catch (error) {
++      console.error('Error:', error);
++    } finally {
++      setLoading(false);
++    }
++  };
++
++  useEffect(() => {
++    fetchReviews();
++  }, []);
++
++  // Handle form submission
++  const handleSubmit = async (e: React.FormEvent) => {
++    e.preventDefault();
++    setSubmitting(true);
++
++    try {
++      const { error } = await supabase
++        .from('reviews')
++        .insert([{
++          patient_name: formData.patient_name,
++          email: formData.email,
++          rating: formData.rating,
++          review_text: formData.review_text,
++          experience_date: formData.experience_date || null,
++        }]);
++
++      if (error) {
++        throw error;
++      }
++
++      toast({
++        title: "Thank you for your review!",
++        description: "Your review has been submitted and will be published after verification.",
++      });
++
++      // Reset form
++      setFormData({
++        patient_name: '',
++        email: '',
++        rating: 5,
++        review_text: '',
++        experience_date: ''
++      });
++
++    } catch (error) {
++      console.error('Error submitting review:', error);
++      toast({
++        title: "Error",
++        description: "Failed to submit review. Please try again.",
++        variant: "destructive",
++      });
++    } finally {
++      setSubmitting(false);
++    }
++  };
++
++  // Render star rating
++  const renderStars = (rating: number, interactive = false, onRatingChange?: (rating: number) => void) => {
++    return (
++      <div className="flex space-x-1">
++        {[1, 2, 3, 4, 5].map((star) => (
++          <Star
++            key={star}
++            className={`w-5 h-5 ${
++              star <= rating
++                ? 'text-yellow-400 fill-yellow-400'
++                : 'text-gray-300'
++            } ${interactive ? 'cursor-pointer hover:text-yellow-400' : ''}`}
++            onClick={interactive && onRatingChange ? () => onRatingChange(star) : undefined}
++          />
++        ))}
++      </div>
++    );
++  };
++
++  // Calculate average rating
++  const averageRating = reviews.length > 0
++    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
++    : 0;
++
++  return (
++    <section id="reviews" className="py-20 bg-gradient-to-br from-green-50 to-white">
++      <div className="container mx-auto px-4">
++        <div className="text-center mb-16">
++          <h2 className="text-4xl font-bold text-gray-800 mb-4">
++            Patient Reviews & Experiences
++          </h2>
++          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
++            Read what our patients say about their lab experience and share your own feedback
++          </p>
++          
++          {/* Overall Rating Stats */}
++          {reviews.length > 0 && (
++            <div className="mt-8 flex justify-center items-center space-x-8">
++              <div className="text-center">
++                <div className="text-3xl font-bold text-green-600">
++                  {averageRating.toFixed(1)}
++                </div>
++                <div className="flex justify-center mt-1">
++                  {renderStars(Math.round(averageRating))}
++                </div>
++                <div className="text-sm text-gray-500 mt-1">Average Rating</div>
++              </div>
++              <div className="text-center">
++                <div className="text-3xl font-bold text-green-600">{reviews.length}</div>
++                <div className="text-sm text-gray-500">Total Reviews</div>
++              </div>
++            </div>
++          )}
++        </div>
++
++        <div className="grid md:grid-cols-2 gap-12">
++          {/* Review Form */}
++          <Card className="shadow-lg">
++            <CardHeader>
++              <CardTitle className="flex items-center text-green-600">
++                <MessageSquare className="mr-2" />
++                Share Your Experience
++              </CardTitle>
++            </CardHeader>
++            <CardContent>
++              <form onSubmit={handleSubmit} className="space-y-6">
++                <div className="space-y-2">
++                  <Label htmlFor="patient_name">Your Name *</Label>
++                  <Input
++                    id="patient_name"
++                    value={formData.patient_name}
++                    onChange={(e) => setFormData({...formData, patient_name: e.target.value})}
++                    required
++                    placeholder="Enter your full name"
++                  />
++                </div>
++
++                <div className="space-y-2">
++                  <Label htmlFor="email">Email Address *</Label>
++                  <Input
++                    id="email"
++                    type="email"
++                    value={formData.email}
++                    onChange={(e) => setFormData({...formData, email: e.target.value})}
++                    required
++                    placeholder="Enter your email"
++                  />
++                </div>
++
++                <div className="space-y-2">
++                  <Label htmlFor="experience_date">Experience Date</Label>
++                  <Input
++                    id="experience_date"
++                    type="date"
++                    value={formData.experience_date}
++                    onChange={(e) => setFormData({...formData, experience_date: e.target.value})}
++                    placeholder="When did you visit us?"
++                  />
++                </div>
++
++                <div className="space-y-2">
++                  <Label>Rating *</Label>
++                  <div className="flex items-center space-x-2">
++                    {renderStars(formData.rating, true, (rating) => 
++                      setFormData({...formData, rating})
++                    )}
++                    <span className="text-sm text-gray-600">({formData.rating}/5)</span>
++                  </div>
++                </div>
++
++                <div className="space-y-2">
++                  <Label htmlFor="review_text">Your Review *</Label>
++                  <Textarea
++                    id="review_text"
++                    value={formData.review_text}
++                    onChange={(e) => setFormData({...formData, review_text: e.target.value})}
++                    required
++                    placeholder="Share your experience with our lab services..."
++                    rows={4}
++                  />
++                </div>
++
++                <Button 
++                  type="submit" 
++                  className="w-full bg-green-600 hover:bg-green-700"
++                  disabled={submitting}
++                >
++                  {submitting ? "Submitting..." : "Submit Review"}
++                </Button>
++              </form>
++            </CardContent>
++          </Card>
++
++          {/* Reviews Display */}
++          <div className="space-y-6">
++            <h3 className="text-2xl font-bold text-gray-800 flex items-center">
++              <Users className="mr-2" />
++              Patient Reviews
++            </h3>
++
++            {loading ? (
++              <div className="space-y-4">
++                {[1, 2, 3].map((i) => (
++                  <Card key={i} className="animate-pulse">
++                    <CardContent className="p-6">
++                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
++                      <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
++                      <div className="h-16 bg-gray-200 rounded"></div>
++                    </CardContent>
++                  </Card>
++                ))}
++              </div>
++            ) : reviews.length === 0 ? (
++              <Card>
++                <CardContent className="p-6 text-center">
++                  <MessageSquare className="mx-auto h-12 w-12 text-gray-400 mb-4" />
++                  <p className="text-gray-600">No reviews yet. Be the first to share your experience!</p>
++                </CardContent>
++              </Card>
++            ) : (
++              <div className="space-y-4 max-h-96 overflow-y-auto">
++                {reviews.map((review) => (
++                  <Card key={review.id} className="shadow-md">
++                    <CardContent className="p-6">
++                      <div className="flex justify-between items-start mb-3">
++                        <div>
++                          <h4 className="font-semibold text-gray-800">{review.patient_name}</h4>
++                          <div className="flex items-center space-x-2 mt-1">
++                            {renderStars(review.rating)}
++                            {review.experience_date && (
++                              <div className="flex items-center text-sm text-gray-500">
++                                <Calendar className="w-4 h-4 mr-1" />
++                                {new Date(review.experience_date).toLocaleDateString()}
++                              </div>
++                            )}
++                          </div>
++                        </div>
++                        <div className="text-xs text-gray-500">
++                          #{review.review_number}
++                        </div>
++                      </div>
++                      <p className="text-gray-700 leading-relaxed">{review.review_text}</p>
++                      <div className="text-xs text-gray-500 mt-3">
++                        {new Date(review.created_at).toLocaleDateString()}
++                      </div>
++                    </CardContent>
++                  </Card>
++                ))}
++              </div>
++            )}
++          </div>
++        </div>
++      </div>
++    </section>
++  );
++};
++
++export default Reviews;
+diff --git a/src/integrations/supabase/types.ts b/src/integrations/supabase/types.ts
+index c11420c..51237c9 100644
+--- a/src/integrations/supabase/types.ts
++++ b/src/integrations/supabase/types.ts
+@@ -14,7 +14,6 @@ export type Database = {
+           additional_info: string | null
+           age: number
+           appointment_date: string
+-          appointment_number: number
+           created_at: string
+           email: string
+           full_name: string
+@@ -27,7 +26,6 @@ export type Database = {
+           additional_info?: string | null
+           age: number
+           appointment_date: string
+-          appointment_number?: number
+           created_at?: string
+           email: string
+           full_name: string
+@@ -40,7 +38,6 @@ export type Database = {
+           additional_info?: string | null
+           age?: number
+           appointment_date?: string
+-          appointment_number?: number
+           created_at?: string
+           email?: string
+           full_name?: string
+@@ -51,6 +48,42 @@ export type Database = {
+         }
+         Relationships: []
+       }
++      reviews: {
++        Row: {
++          created_at: string
++          email: string
++          experience_date: string | null
++          id: string
++          is_verified: boolean | null
++          patient_name: string
++          rating: number
++          review_number: number
++          review_text: string
++        }
++        Insert: {
++          created_at?: string
++          email: string
++          experience_date?: string | null
++          id?: string
++          is_verified?: boolean | null
++          patient_name: string
++          rating: number
++          review_number?: number
++          review_text: string
++        }
++        Update: {
++          created_at?: string
++          email?: string
++          experience_date?: string | null
++          id?: string
++          is_verified?: boolean | null
++          patient_name?: string
++          rating?: number
++          review_number?: number
++          review_text?: string
++        }
++        Relationships: []
++      }
+     }
+     Views: {
+       [_ in never]: never
+diff --git a/src/pages/Index.tsx b/src/pages/Index.tsx
+index eb86c6b..c58a342 100644
+--- a/src/pages/Index.tsx
++++ b/src/pages/Index.tsx
+@@ -1,4 +1,3 @@
+-
+ import React, { useEffect, useState } from 'react';
+ import { Calendar, Phone, Mail, MapPin, Clock, Heart, Activity, Stethoscope, Users, Award, CheckCircle } from 'lucide-react';
+ import { Card, CardContent } from '@/components/ui/card';
+@@ -15,13 +14,14 @@ import Appointment from '@/components/Appointment';
+ import Gallery from '@/components/Gallery';
+ import Contact from '@/components/Contact';
+ import Footer from '@/components/Footer';
++import Reviews from '@/components/Reviews';
+ 
+ const Index = () => {
+   const [activeSection, setActiveSection] = useState('home');
+ 
+   useEffect(() => {
+     const handleScroll = () => {
+-      const sections = ['home', 'about', 'services', 'appointment', 'gallery', 'contact'];
++      const sections = ['home', 'about', 'services', 'appointment', 'reviews', 'gallery', 'contact'];
+       const scrollPosition = window.scrollY + 100;
+ 
+       for (const section of sections) {
+@@ -50,6 +50,7 @@ const Index = () => {
+         <About />
+         <Services />
+         <Appointment />
++        <Reviews />
+         <Gallery />
+         <Contact />
+       </main>
+diff --git a/supabase/migrations/20250620003352-152ad785-5e0c-4ecb-9c8f-108186da7881.sql b/supabase/migrations/20250620003352-152ad785-5e0c-4ecb-9c8f-108186da7881.sql
+new file mode 100644
+index 0000000..e860215
+--- /dev/null
++++ b/supabase/migrations/20250620003352-152ad785-5e0c-4ecb-9c8f-108186da7881.sql
+@@ -0,0 +1,36 @@
++
++-- Create a table for patient reviews
++CREATE TABLE public.reviews (
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
++  review_number SERIAL,
++  patient_name TEXT NOT NULL,
++  email TEXT NOT NULL,
++  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
++  review_text TEXT NOT NULL,
++  experience_date DATE,
++  is_verified BOOLEAN DEFAULT false,
++  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
++);
++
++-- Enable Row Level Security
++ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
++
++-- Allow anyone to insert reviews (public submissions)
++CREATE POLICY "Allow insert for all" ON public.reviews
++  FOR INSERT
++  WITH CHECK (true);
++
++-- Allow anyone to select approved/verified reviews
++CREATE POLICY "Allow select verified reviews" ON public.reviews
++  FOR SELECT
++  USING (is_verified = true);
++
++-- Create index for better performance
++CREATE INDEX idx_reviews_rating ON public.reviews(rating);
++CREATE INDEX idx_reviews_created_at ON public.reviews(created_at DESC);
++CREATE UNIQUE INDEX idx_reviews_number ON public.reviews(review_number);
++
++-- Add constraint to limit review_number to reasonable range
++ALTER TABLE public.reviews 
++ADD CONSTRAINT check_review_number_limit 
++CHECK (review_number <= 1000000);
