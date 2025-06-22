@@ -20,6 +20,7 @@ export type Database = {
           gender: string
           id: string
           mobile_number: string
+          serial_no: number
           tests: string[] | null
         }
         Insert: {
@@ -32,6 +33,7 @@ export type Database = {
           gender: string
           id?: string
           mobile_number: string
+          serial_no?: number
           tests?: string[] | null
         }
         Update: {
@@ -44,6 +46,7 @@ export type Database = {
           gender?: string
           id?: string
           mobile_number?: string
+          serial_no?: number
           tests?: string[] | null
         }
         Relationships: []

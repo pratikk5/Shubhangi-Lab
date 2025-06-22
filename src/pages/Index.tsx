@@ -1,11 +1,5 @@
+
 import React, { useEffect, useState } from 'react';
-import { Calendar, Phone, Mail, MapPin, Clock, Heart, Activity, Stethoscope, Users, Award, CheckCircle } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
