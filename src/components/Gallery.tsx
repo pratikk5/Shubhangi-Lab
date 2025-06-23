@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -80,7 +81,7 @@ const Gallery = () => {
                   </div>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-6 overflow-hidden">
+                <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-6 overflow-hidden [&>button]:hidden">
                   <div className="relative">
                     <img
                       src={image.src}
