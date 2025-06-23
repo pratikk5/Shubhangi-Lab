@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 
 const Gallery = () => {
   const [showAll, setShowAll] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const galleryImages = [
     { id: 1, src: '/gallery1.jpg', alt: '', title: '' },
@@ -27,14 +26,6 @@ const Gallery = () => {
   ];
 
   const visibleImages = showAll ? galleryImages : galleryImages.slice(0, 6);
-
-  const openModal = (imageSrc: string) => {
-    setSelectedImage(imageSrc);
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
-  };
 
   return (
     <section id="gallery" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
@@ -89,21 +80,22 @@ const Gallery = () => {
                   </div>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-6 overflow-hidden" hideCloseButton>
+                <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-6 overflow-hidden">
                   <div className="relative">
                     <img
                       src={image.src}
                       alt={image.alt || `Gallery image ${image.id}`}
                       className="w-full h-auto max-h-[75vh] object-contain rounded-lg"
                     />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12"
-                      onClick={() => document.querySelector('[data-state="open"]')?.querySelector('[data-radix-collection-item]')?.click()}
-                    >
-                      <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                    </Button>
+                    <DialogClose asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12"
+                      >
+                        <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </Button>
+                    </DialogClose>
                   </div>
                 </DialogContent>
               </Dialog>
