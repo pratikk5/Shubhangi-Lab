@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, Calendar } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Calendar, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
