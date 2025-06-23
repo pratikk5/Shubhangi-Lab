@@ -1,51 +1,13 @@
 
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, Calendar, X } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Phone, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ContactInfo from './ContactInfo';
+import LocationCards from './LocationCards';
+import PhoneModal from './PhoneModal';
 
 const Contact = () => {
   const [showPhoneOptions, setShowPhoneOptions] = useState(false);
-
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: 'Phone Numbers',
-      details: ['+91 99203 61564', '+91 73737 39564'],
-      action: 'Call Now',
-      actionLink: 'tel:+919920361564',
-      color: 'green'
-    },
-    {
-      icon: Mail,
-      title: 'Email Address',
-      details: ['yeshwantmane505@gmail.com'],
-      action: 'Send Email',
-      actionLink: 'mailto:yeshwantmane505@gmail.com',
-      color: 'blue'
-    },
-    {
-      icon: Clock,
-      title: 'Operating Hours',
-      details: ['Mon-Sat: 7:30 AM - 10:00 PM', 'Sunday: 7:30 AM - 2:00 PM'],
-      action: 'Book Now',
-      actionLink: '#appointment',
-      color: 'purple'
-    }
-  ];
-
-  const locations = [
-    {
-      title: 'Main Branch',
-      address: 'Shri Swami Samarth Apartment, Ground Floor, Shop No.4, Near BMC Hospital, V.N. Purav Marg, Chunabhatti, Mumbai - 400 022',
-      isPrimary: true
-    },
-    {
-      title: 'Branch Office',
-      address: 'Hill Road, Opp. Veravil Society, Near Laxmi Medical, Chunabhatti, Mumbai-400 022',
-      isPrimary: false
-    }
-  ];
 
   const scrollToAppointment = () => {
     document.getElementById('appointment')?.scrollIntoView({ behavior: 'smooth' });
@@ -55,58 +17,12 @@ const Contact = () => {
     setShowPhoneOptions(true);
   };
 
-  const handlePhoneCall = (phoneNumber: string) => {
-    window.location.href = `tel:${phoneNumber.replace(/\s/g, '')}`;
-    setShowPhoneOptions(false);
-  };
-
-  const getActionIcon = (title: string) => {
-    switch (title) {
-      case 'Phone Numbers':
-        return Phone;
-      case 'Email Address':
-        return Mail;
-      case 'Operating Hours':
-        return Calendar;
-      default:
-        return Phone;
-    }
-  };
-
   return (
     <section id="contact" className="py-20 bg-white relative overflow-hidden">
-      {/* Phone Options Modal */}
-      {showPhoneOptions && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Choose Phone Number</h3>
-              <button 
-                onClick={() => setShowPhoneOptions(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="space-y-3">
-              <Button
-                onClick={() => handlePhoneCall('+919920361564')}
-                className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-center space-x-2"
-              >
-                <Phone className="w-4 h-4" />
-                <span>+91 99203 61564</span>
-              </Button>
-              <Button
-                onClick={() => handlePhoneCall('+917373739564')}
-                className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-center space-x-2"
-              >
-                <Phone className="w-4 h-4" />
-                <span>+91 73737 39564</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <PhoneModal 
+        isOpen={showPhoneOptions} 
+        onClose={() => setShowPhoneOptions(false)} 
+      />
 
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-5">
@@ -129,110 +45,12 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Contact Information Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {contactInfo.map((info, index) => {
-              const IconComponent = info.icon;
-              const ActionIcon = getActionIcon(info.title);
-              const colorClasses = {
-                green: 'from-green-500 to-green-600 bg-green-100 text-green-600 hover:from-green-600 hover:to-green-700',
-                blue: 'from-blue-500 to-blue-600 bg-blue-100 text-blue-600 hover:from-blue-600 hover:to-blue-700',
-                purple: 'from-purple-500 to-purple-600 bg-purple-100 text-purple-600 hover:from-purple-600 hover:to-purple-700'
-              };
+          <ContactInfo 
+            onPhoneClick={handlePhoneClick}
+            onAppointmentClick={scrollToAppointment}
+          />
 
-              return (
-                <Card 
-                  key={info.title}
-                  className="group hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 bg-white border-0 shadow-lg animate-fade-in"
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
-                  <CardContent className="p-8 text-center relative overflow-hidden">
-                    {/* Background gradient effect */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[0]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[1]} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-                    
-                    {/* Icon */}
-                    <div className="relative mb-6">
-                      <div className={`${colorClasses[info.color as keyof typeof colorClasses].split(' ')[2]} p-4 rounded-full w-20 h-20 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
-                        <IconComponent className={`${colorClasses[info.color as keyof typeof colorClasses].split(' ')[3]} w-8 h-8`} />
-                      </div>
-                    </div>
-                    
-                    {/* Content */}
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">
-                      {info.title}
-                    </h3>
-                    
-                    <div className="space-y-2 mb-6">
-                      {info.details.map((detail, idx) => (
-                        <p key={idx} className="text-gray-600 text-sm">
-                          {detail}
-                        </p>
-                      ))}
-                    </div>
-
-                    {/* Action Button */}
-                    <Button
-                      onClick={info.title === 'Phone Numbers' ? handlePhoneClick : info.actionLink.startsWith('#') ? scrollToAppointment : undefined}
-                      asChild={!info.actionLink.startsWith('#') && info.title !== 'Phone Numbers'}
-                      className={`bg-gradient-to-r ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[0]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[1]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[4]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[5]} text-white rounded-full px-6 py-2 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
-                    >
-                      {info.title === 'Phone Numbers' || info.actionLink.startsWith('#') ? (
-                        <span className="flex items-center">
-                          <ActionIcon className="mr-2 w-4 h-4" />
-                          {info.action}
-                        </span>
-                      ) : (
-                        <a href={info.actionLink} className="flex items-center">
-                          <ActionIcon className="mr-2 w-4 h-4" />
-                          {info.action}
-                        </a>
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-
-          {/* Location Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-            {locations.map((location, index) => (
-              <Card 
-                key={location.title}
-                className={`hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border-0 shadow-lg animate-fade-in ${
-                  location.isPrimary 
-                    ? 'bg-gradient-to-br from-green-50 to-green-100' 
-                    : 'bg-gradient-to-br from-blue-50 to-blue-100'
-                }`}
-                style={{ animationDelay: `${0.6 + index * 0.2}s` }}
-              >
-                <CardContent className="p-8">
-                  <div className="flex items-start space-x-4">
-                    <div className={`p-3 rounded-full ${
-                      location.isPrimary ? 'bg-green-600' : 'bg-blue-600'
-                    }`}>
-                      <MapPin className="text-white w-6 h-6" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className={`text-xl font-bold mb-3 ${
-                        location.isPrimary ? 'text-green-800' : 'text-blue-800'
-                      }`}>
-                        {location.title}
-                        {location.isPrimary && (
-                          <span className="ml-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
-                            Primary
-                          </span>
-                        )}
-                      </h3>
-                      <p className="text-gray-700 leading-relaxed">
-                        {location.address}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <LocationCards />
 
           {/* Call to Action */}
           <div className="text-center animate-fade-in" style={{ animationDelay: '1s' }}>
