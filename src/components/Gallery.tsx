@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Eye, X, ZoomIn } from 'lucide-react';
+import { Eye, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Gallery = () => {
@@ -63,8 +62,9 @@ const Gallery = () => {
             {visibleImages.map((image, index) => (
               <div
                 key={image.id}
-                className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 animate-fade-in bg-white"
+                className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 animate-fade-in bg-white cursor-pointer"
                 style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => openLightbox(image.src)}
               >
                 {/* Image */}
                 <div className="aspect-square overflow-hidden bg-gradient-to-br from-green-100 to-green-200">
@@ -82,19 +82,15 @@ const Gallery = () => {
                     <p className="text-gray-200 text-sm mb-4">{image.alt}</p>
                     <Button
                       size="sm"
-                      onClick={() => openLightbox(image.src)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openLightbox(image.src);
+                      }}
                       className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30 rounded-full"
                     >
                       <Eye className="mr-2 w-4 h-4" />
                       View
                     </Button>
-                  </div>
-                </div>
-
-                {/* Zoom icon */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
-                    <ZoomIn className="text-white w-5 h-5" />
                   </div>
                 </div>
               </div>
@@ -114,10 +110,10 @@ const Gallery = () => {
             </div>
           )}
 
-          {/* Lightbox */}
+          {/* Enhanced Full-Screen Lightbox */}
           {selectedImage && (
-            <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fade-in">
-              <div className="relative max-w-4xl max-h-full">
+            <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-fade-in">
+              <div className="relative w-full h-full flex items-center justify-center">
                 <img
                   src={selectedImage}
                   alt="Gallery image"
@@ -127,7 +123,7 @@ const Gallery = () => {
                   variant="ghost"
                   size="icon"
                   onClick={closeLightbox}
-                  className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full"
+                  className="absolute top-6 right-6 bg-black/50 hover:bg-black/70 text-white rounded-full w-12 h-12"
                 >
                   <X className="w-6 h-6" />
                 </Button>

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
@@ -9,6 +8,7 @@ import Gallery from '@/components/Gallery';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import Reviews from '@/components/Reviews';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -49,6 +49,7 @@ const Index = () => {
         <Contact />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 };

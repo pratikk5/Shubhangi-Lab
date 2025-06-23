@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, MessageCircle, X } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Calendar } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -58,6 +57,19 @@ const Contact = () => {
   const handlePhoneCall = (phoneNumber: string) => {
     window.location.href = `tel:${phoneNumber.replace(/\s/g, '')}`;
     setShowPhoneOptions(false);
+  };
+
+  const getActionIcon = (title: string) => {
+    switch (title) {
+      case 'Phone Numbers':
+        return Phone;
+      case 'Email Address':
+        return Mail;
+      case 'Operating Hours':
+        return Calendar;
+      default:
+        return Phone;
+    }
   };
 
   return (
@@ -120,6 +132,7 @@ const Contact = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {contactInfo.map((info, index) => {
               const IconComponent = info.icon;
+              const ActionIcon = getActionIcon(info.title);
               const colorClasses = {
                 green: 'from-green-500 to-green-600 bg-green-100 text-green-600 hover:from-green-600 hover:to-green-700',
                 blue: 'from-blue-500 to-blue-600 bg-blue-100 text-blue-600 hover:from-blue-600 hover:to-blue-700',
@@ -163,13 +176,13 @@ const Contact = () => {
                       className={`bg-gradient-to-r ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[0]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[1]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[4]} ${colorClasses[info.color as keyof typeof colorClasses].split(' ')[5]} text-white rounded-full px-6 py-2 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
                     >
                       {info.title === 'Phone Numbers' || info.actionLink.startsWith('#') ? (
-                        <span>
-                          <MessageCircle className="mr-2 w-4 h-4" />
+                        <span className="flex items-center">
+                          <ActionIcon className="mr-2 w-4 h-4" />
                           {info.action}
                         </span>
                       ) : (
-                        <a href={info.actionLink}>
-                          <MessageCircle className="mr-2 w-4 h-4" />
+                        <a href={info.actionLink} className="flex items-center">
+                          <ActionIcon className="mr-2 w-4 h-4" />
                           {info.action}
                         </a>
                       )}
@@ -233,16 +246,17 @@ const Contact = () => {
                 <Button 
                   onClick={scrollToAppointment}
                   size="lg"
-                  className="bg-white text-green-600 hover:bg-green-50 px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                  className="bg-white text-green-600 hover:bg-green-50 px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
                 >
+                  <Calendar className="mr-2 w-5 h-5" />
                   Book Appointment Now
                 </Button>
                 <Button 
                   onClick={handlePhoneClick}
                   size="lg"
-                  className="bg-green-600 text-white hover:bg-white hover:text-green-600 px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                  className="bg-green-600 text-white hover:bg-white hover:text-green-600 px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
                 >
-                  <Phone className="mr-2" />
+                  <Phone className="mr-2 w-5 h-5" />
                   Call Us Now
                 </Button>
               </div>
