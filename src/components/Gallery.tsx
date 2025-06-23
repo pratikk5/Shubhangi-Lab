@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,6 @@ const Gallery = () => {
   const [showAll, setShowAll] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  // Placeholder images - in real implementation, these would be actual lab photos
   const galleryImages = [
     { id: 1, src: '/gallery1.jpg', alt: '', title: '' },
     { id: 2, src: '/gallery2.jpg', alt: '', title: '' },
@@ -67,7 +65,6 @@ const Gallery = () => {
                   <div
                     className="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 animate-fade-in bg-white cursor-pointer"
                     style={{ animationDelay: `${index * 0.1}s` }}
-                    onClick={() => openModal(image.src)}
                   >
                     {/* Image */}
                     <div className="aspect-square overflow-hidden bg-gradient-to-br from-green-100 to-green-200">
@@ -92,18 +89,18 @@ const Gallery = () => {
                   </div>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-4xl w-full max-h-[90vh] p-0 overflow-hidden">
+                <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-6 overflow-hidden" hideCloseButton>
                   <div className="relative">
                     <img
                       src={image.src}
                       alt={image.alt || `Gallery image ${image.id}`}
-                      className="w-full h-auto max-h-[85vh] object-contain"
+                      className="w-full h-auto max-h-[75vh] object-contain rounded-lg"
                     />
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={closeModal}
-                      className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12"
+                      className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12"
+                      onClick={() => document.querySelector('[data-state="open"]')?.querySelector('[data-radix-collection-item]')?.click()}
                     >
                       <X className="w-5 h-5 sm:w-6 sm:h-6" />
                     </Button>
