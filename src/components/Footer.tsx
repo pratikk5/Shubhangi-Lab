@@ -112,7 +112,7 @@ const Footer = () => {
                   <p className="text-xs text-green-100">Made with</p>
                   <div className="flex items-center justify-center space-x-1">
                     <Heart className="text-red-400 w-4 h-4 animate-pulse" />
-                    <span className="text-xs text-green-100">for better health</span>
+                    <span className="text-xs text-green-100">by pratik for better health</span>
                   </div>
                 </div>
               </div>
