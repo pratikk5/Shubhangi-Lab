@@ -33,6 +33,21 @@ const AppointmentsList = () => {
   const fetchAppointments = async () => {
     try {
       console.log('Fetching appointments...');
+      
+      // Check if user is authenticated
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        console.error('Authentication required to view appointments');
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to view appointments",
+          variant: "destructive",
+        });
+        setAppointments([]);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('appointments')
         .select('*')

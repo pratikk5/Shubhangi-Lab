@@ -113,6 +113,14 @@ const Reviews = () => {
     }
   };
 
+  // Sanitize patient name for privacy (show only first name + last initial)
+  const sanitizePatientName = (fullName: string): string => {
+    if (!fullName) return 'Anonymous';
+    const nameParts = fullName.trim().split(' ');
+    if (nameParts.length === 1) return nameParts[0];
+    return `${nameParts[0]} ${nameParts[1].charAt(0)}.`;
+  };
+
   // Render star rating
   const renderStars = (rating: number, interactive = false, onRatingChange?: (rating: number) => void) => {
     return (
@@ -279,7 +287,7 @@ const Reviews = () => {
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-3">
                         <div>
-                          <h4 className="font-semibold text-gray-800">{review.patient_name}</h4>
+                          <h4 className="font-semibold text-gray-800">{sanitizePatientName(review.patient_name)}</h4>
                           <div className="flex items-center space-x-2 mt-1">
                             {renderStars(review.rating)}
                             {review.experience_date && (
