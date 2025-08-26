@@ -13,12 +13,19 @@ interface Review {
   id: string;
   review_number: number;
   patient_name: string;
+  rating: number;
+  review_text: string;
+  experience_date: string | null;
+  created_at: string;
+}
+
+// Separate interface for form submission that includes email
+interface ReviewSubmission {
+  patient_name: string;
   email: string;
   rating: number;
   review_text: string;
   experience_date: string | null;
-  is_verified: boolean;
-  created_at: string;
 }
 
 const Reviews = () => {
@@ -42,7 +49,7 @@ const Reviews = () => {
     try {
       const { data, error } = await supabase
         .from('reviews')
-        .select('*')
+        .select('id, review_number, patient_name, rating, review_text, experience_date, created_at')
         .eq('is_verified', true)
         .order('created_at', { ascending: false });
 
