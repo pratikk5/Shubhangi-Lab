@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Heart, Award, Shield } from 'lucide-react';
+import { Heart, Award, Shield, Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -90,6 +90,18 @@ const Footer = () => {
                   <p className="text-green-100 font-medium">Hours:</p>
                   <p className="text-white">Mon-Sat: 7:30 AM - 10:00 PM</p>
                   <p className="text-white">Sunday: 7:30 AM - 2:00 PM</p>
+                </div>
+                <div>
+                  <p className="text-green-100 font-medium">Follow Us:</p>
+                  <a 
+                    href="https://www.instagram.com/shubhangi_diagnostic_center/?igsh=MnY5Zm4yNGw0OXF3&utm_source=qr" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-green-200 transition-colors flex items-center space-x-2"
+                  >
+                    <Instagram className="w-4 h-4" />
+                    <span>Instagram</span>
+                  </a>
                 </div>
               </div>
             </div>
