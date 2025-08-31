@@ -94,7 +94,7 @@ const Footer = () => {
                 <div>
                   <p className="text-green-100 font-medium">Follow Us:</p>
                   <a 
-                    href="https://www.instagram.com/shubhangi_diagnostic_center/?igsh=MnY5Zm4yNGw0OXF3&utm_source=qr" 
+                    href="http://instagram.com/shubhangi_diagnostic_center/?igsh=MnY5Zm4yNGw0OXF3&utm_source=qr" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-white hover:text-green-200 transition-colors flex items-center space-x-2"
